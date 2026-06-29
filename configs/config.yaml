@@ -37,15 +37,15 @@ data:
   variant_output: "results/autism_2024_JA_TS_features.xlsx"
   invariant_output: "results/autism_2024_JA_TS_features.xlsx"
 
-  # CatBoost Phase 4 files
-  sfs_results_excel_file_catboost: "results/autism_2024_phase4_1_SFS_results_CatBoost.xlsx"
-  combination_results_file_catboost: "results/autism_2024_Step_2_Results_CatBoost.xlsx"
-  scores_file_catboost: "results/autism_2024_Scores_CatBoost.xlsx"
-  scores_file_top3_catboost: "results/autism_2024_Scores_CatBoost_Top3.xlsx"
+  # FTTransformer Phase 4 files
+  sfs_results_excel_file_FTTransformer: "results/autism_2024_phase4_1_SFS_results_FTTransformer.xlsx"
+  combination_results_file_FTTransformer: "results/autism_2024_Step_2_Results_FTTransformer.xlsx"
+  scores_file_FTTransformer: "results/autism_2024_Scores_FTTransformer.xlsx"
+  scores_file_top3_FTTransformer: "results/autism_2024_Scores_FTTransformer_Top3.xlsx"
 
-  # CatBoost SHAP output
-  output_file_catboost: "output-autism/autism_2024_SHAP_data_CatBoost.xlsx"
-  output_dir_catboost: "output-autism/autism_2024_SHAP_CatBoost"
+  # FTTransformer SHAP output
+  output_file_FTTransformer: "output-autism/autism_2024_SHAP_data_FTTransformer.xlsx"
+  output_dir_FTTransformer: "output-autism/autism_2024_SHAP_FTTransformer"
 
 
 remove_correlated_features:
@@ -59,7 +59,6 @@ remove_correlated_features:
 split_datasets:
   # Phase 3 input/output
   input_file: "results/autism_2024_NH_correlated_features.xlsx"
-
   output_train_file: "results/autism_2024_train.xlsx"
   output_test_file: "results/autism_2024_test.xlsx"
 
@@ -69,8 +68,8 @@ SFS:
   dataset_train_file: "results/autism_2024_train.xlsx"
   dataset_test_file: "results/autism_2024_test.xlsx"
 
-  # Phase 4.1 CatBoost output file
-  Phase4_1_SFS_scores_file_catboost: "results/autism_2024_phase4_1_SFS_results_CatBoost.xlsx"
+  # Phase 4.1 FTTransformer output file
+  Phase4_1_SFS_scores_file_FTTransformer: "results/autism_2024_phase4_1_SFS_results_FTTransformer.xlsx"
 
   labels_column: "Group"
 
@@ -79,25 +78,25 @@ SFS:
     1: "Autism"
 
 
-CatBoost:
+FTTransformer:
   random_state: 42
   n_splits: 5
+  max_epochs: 150
+  patience: 20
   strict_subject_split: true
   participant_column: "Participant"
 
-  # Feature counts to test
   feature_counts: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 
-  # Top 3 selection
-  top3_feature_counts: [5, 6, 10]
+  hidden_layers:
+    - [32]
+    - [64]
+    - [128]
+    - [64, 32]
+    - [128, 64]
+    - [128, 64, 32]
 
-  # Hyperparameter search
-  iterations: [50, 100, 150, 200]
-  depth: [2, 3, 4, 5]
-  learning_rate: [0.01, 0.03, 0.05, 0.1]
-  l2_leaf_reg: [1, 3, 5, 7]
-  bagging_temperature: [0.0, 0.5, 1.0]
-  random_strength: [0.0, 0.5, 1.0]
-
-  # Optional limit to avoid too many combinations
-  max_candidates: 50
+  dropout: [0.1, 0.2, 0.3, 0.4, 0.5]
+  learning_rate: [0.001, 0.0005, 0.0001]
+  batch_size: [4, 8, 16]
+  weight_decay: [0.0, 0.0001, 0.001]
