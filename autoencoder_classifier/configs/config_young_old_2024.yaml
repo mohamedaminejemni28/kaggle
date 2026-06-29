@@ -1,0 +1,75 @@
+data:
+  feature_names_file: "data/raw/ISB Abstract - Joint Angles and TS Variable Names.xlsx"
+
+  # Raw input files
+  variant_file: "data/raw/2024 ALL Collected Speeds Young and Older Adults ALL Features - FINAL AUGUST 20.xlsx"
+  invariant_file: "data/raw/2024 ALL Post-Processing Speeds Young and Older Adults ALL Features - FINAL AUGUST 20.xlsx"
+
+  # Phase 1 output
+  variant_output: "results/young_old_2024_JA_TS_features.xlsx"
+  invariant_output: "results/young_old_2024_JA_TS_features.xlsx"
+
+  # AutoencoderClassifier Phase 4 files
+  sfs_results_excel_file_AutoencoderClassifier: "results/young_old_2024_phase4_1_SFS_results_AutoencoderClassifier.xlsx"
+  combination_results_file_AutoencoderClassifier: "results/young_old_2024_Step_2_Results_AutoencoderClassifier.xlsx"
+  scores_file_AutoencoderClassifier: "results/young_old_2024_Scores_AutoencoderClassifier.xlsx"
+  scores_file_top3_AutoencoderClassifier: "results/young_old_2024_Scores_AutoencoderClassifier_Top3.xlsx"
+
+  # AutoencoderClassifier SHAP output
+  output_file_AutoencoderClassifier: "output-young-old/young_old_2024_SHAP_data_AutoencoderClassifier.xlsx"
+  output_dir_AutoencoderClassifier: "output-young-old/young_old_2024_SHAP_AutoencoderClassifier"
+
+
+remove_correlated_features:
+  highly_correlated_features_file: "data/raw/Highly correlated features.xlsx"
+
+  # Phase 2 input/output
+  input_excel_file: "results/young_old_2024_JA_TS_features.xlsx"
+  output_excel_file: "results/young_old_2024_NH_correlated_features.xlsx"
+
+
+split_datasets:
+  # Phase 3 input/output
+  input_file: "results/young_old_2024_NH_correlated_features.xlsx"
+  output_train_file: "results/young_old_2024_train.xlsx"
+  output_test_file: "results/young_old_2024_test.xlsx"
+
+
+SFS:
+  # Phase 4.1 input files
+  dataset_train_file: "results/young_old_2024_train.xlsx"
+  dataset_test_file: "results/young_old_2024_test.xlsx"
+
+  # Phase 4.1 AutoencoderClassifier output file
+  Phase4_1_SFS_scores_file_AutoencoderClassifier: "results/young_old_2024_phase4_1_SFS_results_AutoencoderClassifier.xlsx"
+
+  labels_column: "Group"
+
+  classes:
+    0: "Young"
+    1: "Older"
+
+
+AutoencoderClassifier:
+  random_state: 42
+  n_splits: 5
+  max_epochs: 150
+  patience: 20
+  strict_subject_split: true
+  participant_column: "Participant"
+
+  feature_counts: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+  hidden_layers:
+    - [32]
+    - [64]
+    - [128]
+    - [64, 32]
+    - [128, 64]
+    - [128, 64, 32]
+
+  dropout: [0.1, 0.2, 0.3, 0.4, 0.5]
+  learning_rate: [0.001, 0.0005, 0.0001]
+  batch_size: [4, 8, 16]
+  weight_decay: [0.0, 0.0001, 0.001]
+
